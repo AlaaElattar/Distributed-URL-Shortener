@@ -6,8 +6,6 @@ import (
 	"url-shortener/app"
 )
 
-// TODO: support multiple environments with docker compose
-// TODO: add graceful shutdown
 func main() {
 	app, err := app.NewApp()
 	if err != nil {
