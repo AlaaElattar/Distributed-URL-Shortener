@@ -6,13 +6,8 @@ import (
 	"url-shortener/app"
 )
 
-//TODO: make docs
-//TODO: add tests
-//TODO: add readme file
-//TODO: check links compared to provided ones in task
-//TODO: check on format of shortened ID(if it should contain https://)
-// TODO: support multiple environments with docker compose (instabug task)
-//TODO: add graceful shutdown
+// TODO: support multiple environments with docker compose
+// TODO: add graceful shutdown
 func main() {
 	app, err := app.NewApp()
 	if err != nil {

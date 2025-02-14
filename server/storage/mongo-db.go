@@ -12,14 +12,19 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+// MongoDBClient defines the interface for logging analytics.
+type MongoDBClient interface {
+	LogAccess(log models.AccessLog) error
+}
+
 // MongoDBClient for storing analytics logs in MongoDB.
-type MongoDBClient struct {
+type mongoDBClient struct {
 	Client *mongo.Client
 	DB     *mongo.Database
 }
 
 // NewMongoDBClient creates new MongoDB client
-func NewMongoDBClient() (MongoDBClient, error) {
+func NewMongoDBClient() (*mongoDBClient, error) {
 	mongoURI := os.Getenv("MONGO_URI")
 
 	//TODO: check timeout ??
@@ -29,25 +34,25 @@ func NewMongoDBClient() (MongoDBClient, error) {
 
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoURI))
 	if err != nil {
-		return MongoDBClient{}, fmt.Errorf("failed to connect to MongoDB: %v", err)
+		return &mongoDBClient{}, fmt.Errorf("failed to connect to MongoDB: %v", err)
 	}
 
 	db := client.Database("analytics")
 
-	return MongoDBClient{
+	return &mongoDBClient{
 		Client: client,
 		DB:     db,
 	}, nil
 }
 
 // LogAccess saves an access log to MongoDB collection.
-func (mongodb *MongoDBClient) LogAccess(log models.AccessLog) error {
+func (mongodb *mongoDBClient) LogAccess(log models.AccessLog) error {
 	collection := mongodb.DB.Collection("access_logs")
 
 	_, err := collection.InsertOne(context.TODO(), bson.M{
-		"short_id": log.ShortID,
+		"short_id":  log.ShortID,
 		"timestamp": log.Timestamp,
-		"user_ip": log.UserIP,
+		"user_ip":   log.UserIP,
 	})
 	return err
 

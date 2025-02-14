@@ -25,7 +25,7 @@ type App struct {
 // NewApp creates new app with all configurations.
 func NewApp() (*App, error) {
 	// Load environment variables if running app locally
-	if os.Getenv("DOCKER_ENV") == ""{
+	if os.Getenv("DOCKER_ENV") == "" {
 		err := godotenv.Load("../.env")
 		if err != nil {
 			log.Println(".env file not found")
