@@ -1,0 +1,42 @@
+version: "3.9"
+
+volumes:
+  redis-volume:
+    driver: local
+  mongo-volume:
+    driver: local
+
+services:
+  redis-db:
+    image: redis:alpine
+    container_name: redis-db
+    ports:
+      - "6379:6379"
+    restart: always
+    volumes:
+      - redis-volume:/data
+
+  mongo-db:
+    image: mongo:latest
+    container_name: mongo-db
+    ports:
+      - "27017:27017"
+    restart: always
+    volumes:
+      - mongo-volume:/data/db
+
+  server:
+    container_name: url_shortener
+    restart: always
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis-db
+      - mongo-db
+    environment:
+      - DOCKER_ENV=true
+    env_file:
+      - .env
