@@ -7,6 +7,7 @@ MongoDB.
 
 - [🚀 Overview](#-overview)
 - [🏗 System Architecture](#-system-architecture)
+- [📡 API Endpoints](#-api-endpoints)
 
 - [📌 Environment Configuration](#-environment-configuration)
 
@@ -58,6 +59,55 @@ The following diagram illustrates the architecture of the Distributed URL Shorte
 ✔️ API (Gin Framework) → Handles business logic, rate limiting, and URL mapping.  
 ✔️ Redis Cache → Stores shortened URLs with a 30-day expiry.  
 ✔️ MongoDB → Stores analytics logs (shortID, timestamp, user IP).
+
+### 📡 API Endpoints
+
+#### 🔗 Shorten a URL
+
+#### Request
+
+```bash
+POST /shorten
+Content-Type: application/json
+
+{
+  "url": "https://example.com"
+}
+```
+
+#### Response
+
+```bash
+{
+  "short_url": "l9UfrB"
+}
+```
+
+#### ↩️ Redirect to Original URL
+
+#### Request
+
+```bash
+GET /{shortID}
+```
+
+#### Response
+
+```bash
+{
+  "long_url": "https://example.com"
+}
+```
+
+### 🚫 Rate Limit Exceeded
+
+If a user exceeds the request limit (e.g., 10 requests per minute), they will receive the following response:
+
+```bash
+{
+  "error": "Rate limit exceeded. Please wait a minute before trying again.",
+}
+```
 
 ## 📌 Environment Configuration
 
@@ -189,19 +239,19 @@ minikube stop
 
 To run tests, ensure you are inside the server/ directory where the Go modules are located.
 
-### 1️⃣ Navigate to the server/ directory:
+### 1️⃣ Navigate to the server/ directory
 
 ```bash
 cd server
 ```
 
-### 2️⃣ Run all tests inside the project:
+### 2️⃣ Run all tests inside the project
 
 ```bash
 go test ./...
 ```
 
-### 3️⃣ Run tests inside a Docker container (if using Docker Compose):
+### 3️⃣ Run tests inside a Docker container (if using Docker Compose)
 
 ```bash
 docker compose exec api go test -v ./app
