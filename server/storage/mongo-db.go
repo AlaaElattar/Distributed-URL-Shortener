@@ -27,7 +27,6 @@ type mongoDBClient struct {
 func NewMongoDBClient() (*mongoDBClient, error) {
 	mongoURI := os.Getenv("MONGO_URI")
 
-	//TODO: check timeout ??
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 
 	defer cancel()
